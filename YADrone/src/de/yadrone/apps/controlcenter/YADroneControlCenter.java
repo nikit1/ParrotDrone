@@ -17,6 +17,7 @@ public class YADroneControlCenter
 			ardrone = new ARDrone();
 			System.out.println("Connect drone controller");
 			ardrone.start();
+			//test 1 comment.
 			
 			new CCFrame(ardrone);
 		}
