@@ -49,7 +49,7 @@ public class KeyboardCommandManager implements KeyListener
 		}
 
 		switch (key)
-		{
+		{ //NOAH TEST COMMENT
 			case KeyEvent.VK_ENTER:
 				drone.takeOff();
 				break;
