@@ -7,7 +7,10 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 
+import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
@@ -51,7 +54,15 @@ public class FrameSaverPanel extends JPanel implements ICCPlugin
 		framesSeen++;
 		if(framesSeen%everyXthFrame == 0 && doSave){
 			framesSaved++;
-			System.out.println("SAVING IMAGE " + framesSaved);
+			try {
+			String filePath = filepath + "image"+framesSaved+".jpg";
+			File toSaveTo = new File(filePath);
+			
+				ImageIO.write(image, "jpg", toSaveTo);
+			} catch (IOException e) {
+				System.err.println("Failed to save a frame to image");
+				e.printStackTrace();
+			}
 		}
 	}
 
