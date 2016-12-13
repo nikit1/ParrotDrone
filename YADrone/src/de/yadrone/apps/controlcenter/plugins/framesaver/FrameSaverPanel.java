@@ -36,31 +36,65 @@ import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.JRadioButton;
 import javax.swing.SwingConstants;
+import javax.swing.ButtonGroup;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class FrameSaverPanel extends JPanel implements ICCPlugin
 {
 	private IARDrone drone;
 	String filepath = "Saved_Stream_Pictures\\";
-	boolean doSave;
+	
 	
 	private BufferedImage image = null;
 	private Result detectionResult;
 	private int everyXthFrame = 35;
 	private int framesSeen = 0;
 	private int framesSaved = 0;
+	private boolean doSave = false;
+	
+	
+	private JTextField editFilepath;
+	private JLabel lblFilepath;
+	private final ButtonGroup buttonGroup = new ButtonGroup();
+	private JLabel lblFrameSaveInterval;
+	private JSpinner spnrFrameSaveInterval;
+	private JRadioButton rdbtnDoSaveTrue;
+	private JRadioButton rdbtnDoSaveFalse;
+	private JLabel lblDoSaveValue;
+	private JLabel lblImageFileType_1;
+	private JLabel lblVlunumsaved;
 
+	
+	private void refreshFilePath(){
+		this.lblFilepath.setText(filepath);
+		this.editFilepath.setText(filepath);
+	}
+	
+	private void refreshFrameSaveInterval(){
+		this.lblFrameSaveInterval.setText("" + everyXthFrame);
+		this.spnrFrameSaveInterval.setValue(everyXthFrame);
+	}
+	
+	private void refreshDoSave(){
+		this.lblDoSaveValue.setText("" + doSave);
+			rdbtnDoSaveTrue.setSelected(doSave);
+			rdbtnDoSaveFalse.setSelected(!doSave);
+	}
+	
 	
 	public FrameSaverPanel()
 	{
 
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWidths = new int[]{0, 0, 0, 0};
-		gridBagLayout.rowHeights = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0};
+		gridBagLayout.rowHeights = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 		gridBagLayout.columnWeights = new double[]{1.0, 1.0, 0.0, Double.MIN_VALUE};
-		gridBagLayout.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		gridBagLayout.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, Double.MIN_VALUE};
 		setLayout(gridBagLayout);
 		
 		JLabel label = new JLabel("FilePath");
+		label.setFont(new Font("Tahoma", Font.BOLD, 12));
 		GridBagConstraints gbc_label = new GridBagConstraints();
 		gbc_label.gridwidth = 3;
 		gbc_label.insets = new Insets(0, 0, 5, 0);
@@ -68,7 +102,7 @@ public class FrameSaverPanel extends JPanel implements ICCPlugin
 		gbc_label.gridy = 0;
 		add(label, gbc_label);
 		
-		JLabel lblFilepath = new JLabel("FilePath");
+		lblFilepath = new JLabel("FilePath");
 		lblFilepath.setHorizontalAlignment(SwingConstants.CENTER);
 		GridBagConstraints gbc_lblFilepath = new GridBagConstraints();
 		gbc_lblFilepath.insets = new Insets(0, 0, 5, 5);
@@ -76,24 +110,31 @@ public class FrameSaverPanel extends JPanel implements ICCPlugin
 		gbc_lblFilepath.gridy = 1;
 		add(lblFilepath, gbc_lblFilepath);
 		
-		txtFilepath = new JTextField();
-		txtFilepath.setText("Filepath");
-		GridBagConstraints gbc_txtFilepath = new GridBagConstraints();
-		gbc_txtFilepath.insets = new Insets(0, 0, 5, 5);
-		gbc_txtFilepath.fill = GridBagConstraints.HORIZONTAL;
-		gbc_txtFilepath.gridx = 1;
-		gbc_txtFilepath.gridy = 1;
-		add(txtFilepath, gbc_txtFilepath);
-		txtFilepath.setColumns(10);
+		editFilepath = new JTextField();
+		editFilepath.setText("Filepath");
+		GridBagConstraints gbc_editFilepath = new GridBagConstraints();
+		gbc_editFilepath.insets = new Insets(0, 0, 5, 5);
+		gbc_editFilepath.fill = GridBagConstraints.HORIZONTAL;
+		gbc_editFilepath.gridx = 1;
+		gbc_editFilepath.gridy = 1;
+		add(editFilepath, gbc_editFilepath);
+		editFilepath.setColumns(10);
 		
-		JButton btnUpdate = new JButton("Update");
-		GridBagConstraints gbc_btnUpdate = new GridBagConstraints();
-		gbc_btnUpdate.insets = new Insets(0, 0, 5, 0);
-		gbc_btnUpdate.gridx = 2;
-		gbc_btnUpdate.gridy = 1;
-		add(btnUpdate, gbc_btnUpdate);
+		JButton btnFilepathUpdate = new JButton("Update");
+		btnFilepathUpdate.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				filepath = editFilepath.getText();
+				refreshFilePath();
+			}
+		});
+		GridBagConstraints gbc_btnFilepathUpdate = new GridBagConstraints();
+		gbc_btnFilepathUpdate.insets = new Insets(0, 0, 5, 0);
+		gbc_btnFilepathUpdate.gridx = 2;
+		gbc_btnFilepathUpdate.gridy = 1;
+		add(btnFilepathUpdate, gbc_btnFilepathUpdate);
 		
 		JLabel lblSaveXthFrame = new JLabel("Save Xth Frame");
+		lblSaveXthFrame.setFont(new Font("Tahoma", Font.BOLD, 12));
 		GridBagConstraints gbc_lblSaveXthFrame = new GridBagConstraints();
 		gbc_lblSaveXthFrame.gridwidth = 3;
 		gbc_lblSaveXthFrame.insets = new Insets(0, 0, 5, 0);
@@ -101,29 +142,37 @@ public class FrameSaverPanel extends JPanel implements ICCPlugin
 		gbc_lblSaveXthFrame.gridy = 2;
 		add(lblSaveXthFrame, gbc_lblSaveXthFrame);
 		
-		JLabel lblXthframe = new JLabel("XthFrame");
-		GridBagConstraints gbc_lblXthframe = new GridBagConstraints();
-		gbc_lblXthframe.insets = new Insets(0, 0, 5, 5);
-		gbc_lblXthframe.gridx = 0;
-		gbc_lblXthframe.gridy = 3;
-		add(lblXthframe, gbc_lblXthframe);
+		lblFrameSaveInterval = new JLabel("XthFrame");
+		GridBagConstraints gbc_lblFrameSaveInterval = new GridBagConstraints();
+		gbc_lblFrameSaveInterval.insets = new Insets(0, 0, 5, 5);
+		gbc_lblFrameSaveInterval.gridx = 0;
+		gbc_lblFrameSaveInterval.gridy = 3;
+		add(lblFrameSaveInterval, gbc_lblFrameSaveInterval);
 		
-		JSpinner spinner = new JSpinner();
-		spinner.setModel(new SpinnerNumberModel(new Integer(0), new Integer(0), null, new Integer(1)));
-		GridBagConstraints gbc_spinner = new GridBagConstraints();
-		gbc_spinner.insets = new Insets(0, 0, 5, 5);
-		gbc_spinner.gridx = 1;
-		gbc_spinner.gridy = 3;
-		add(spinner, gbc_spinner);
+		spnrFrameSaveInterval = new JSpinner();
+		spnrFrameSaveInterval.setModel(new SpinnerNumberModel(new Integer(0), new Integer(0), null, new Integer(1)));
+		GridBagConstraints gbc_spnrFrameSaveInterval = new GridBagConstraints();
+		gbc_spnrFrameSaveInterval.insets = new Insets(0, 0, 5, 5);
+		gbc_spnrFrameSaveInterval.gridx = 1;
+		gbc_spnrFrameSaveInterval.gridy = 3;
+		add(spnrFrameSaveInterval, gbc_spnrFrameSaveInterval);
 		
-		JButton button = new JButton("Update");
-		GridBagConstraints gbc_button = new GridBagConstraints();
-		gbc_button.insets = new Insets(0, 0, 5, 0);
-		gbc_button.gridx = 2;
-		gbc_button.gridy = 3;
-		add(button, gbc_button);
+		JButton btnFrameSaveInterval = new JButton("Update");
+		btnFrameSaveInterval.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				everyXthFrame = (Integer) spnrFrameSaveInterval.getValue();
+				refreshFrameSaveInterval();
+			}
+		});
+		
+		GridBagConstraints gbc_btnFrameSaveInterval = new GridBagConstraints();
+		gbc_btnFrameSaveInterval.insets = new Insets(0, 0, 5, 0);
+		gbc_btnFrameSaveInterval.gridx = 2;
+		gbc_btnFrameSaveInterval.gridy = 3;
+		add(btnFrameSaveInterval, gbc_btnFrameSaveInterval);
 		
 		JLabel lblCurrentlySaving = new JLabel("Currently Saving?");
+		lblCurrentlySaving.setFont(new Font("Tahoma", Font.BOLD, 12));
 		GridBagConstraints gbc_lblCurrentlySaving = new GridBagConstraints();
 		gbc_lblCurrentlySaving.gridwidth = 3;
 		gbc_lblCurrentlySaving.insets = new Insets(0, 0, 5, 0);
@@ -131,65 +180,101 @@ public class FrameSaverPanel extends JPanel implements ICCPlugin
 		gbc_lblCurrentlySaving.gridy = 4;
 		add(lblCurrentlySaving, gbc_lblCurrentlySaving);
 		
-		JLabel lblDosavevlaue = new JLabel("doSaveVlaue");
-		GridBagConstraints gbc_lblDosavevlaue = new GridBagConstraints();
-		gbc_lblDosavevlaue.insets = new Insets(0, 0, 5, 5);
-		gbc_lblDosavevlaue.gridx = 0;
-		gbc_lblDosavevlaue.gridy = 5;
-		add(lblDosavevlaue, gbc_lblDosavevlaue);
+		lblDoSaveValue = new JLabel("doSaveVlaue");
+		GridBagConstraints gbc_lblDoSaveValue = new GridBagConstraints();
+		gbc_lblDoSaveValue.insets = new Insets(0, 0, 5, 5);
+		gbc_lblDoSaveValue.gridx = 0;
+		gbc_lblDoSaveValue.gridy = 5;
+		add(lblDoSaveValue, gbc_lblDoSaveValue);
 		
 		JPanel panel = new JPanel();
 		GridBagConstraints gbc_panel = new GridBagConstraints();
 		gbc_panel.insets = new Insets(0, 0, 5, 5);
-		gbc_panel.fill = GridBagConstraints.BOTH;
+		gbc_panel.fill = GridBagConstraints.VERTICAL;
 		gbc_panel.gridx = 1;
 		gbc_panel.gridy = 5;
 		add(panel, gbc_panel);
 		
-		JRadioButton rdbtnNewRadioButton = new JRadioButton("True");
-		panel.add(rdbtnNewRadioButton);
+		rdbtnDoSaveTrue = new JRadioButton("True");
+		buttonGroup.add(rdbtnDoSaveTrue);
+		panel.add(rdbtnDoSaveTrue);
 		
-		JRadioButton rdbtnFalse = new JRadioButton("False");
-		panel.add(rdbtnFalse);
+		rdbtnDoSaveFalse = new JRadioButton("False");
+		buttonGroup.add(rdbtnDoSaveFalse);
+		panel.add(rdbtnDoSaveFalse);
 		
-		JButton button_1 = new JButton("Update");
-		GridBagConstraints gbc_button_1 = new GridBagConstraints();
-		gbc_button_1.insets = new Insets(0, 0, 5, 0);
-		gbc_button_1.gridx = 2;
-		gbc_button_1.gridy = 5;
-		add(button_1, gbc_button_1);
+		JButton btnDoSaveUpdate = new JButton("Update");
+		btnDoSaveUpdate.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				doSave = rdbtnDoSaveTrue.isSelected();
+				refreshDoSave();
+			}
+		});
+		GridBagConstraints gbc_btnDoSaveUpdate = new GridBagConstraints();
+		gbc_btnDoSaveUpdate.insets = new Insets(0, 0, 5, 0);
+		gbc_btnDoSaveUpdate.gridx = 2;
+		gbc_btnDoSaveUpdate.gridy = 5;
+		add(btnDoSaveUpdate, gbc_btnDoSaveUpdate);
 		
 		JLabel lblImageFileType = new JLabel("Image File Type");
+		lblImageFileType.setFont(new Font("Tahoma", Font.BOLD, 12));
 		GridBagConstraints gbc_lblImageFileType = new GridBagConstraints();
 		gbc_lblImageFileType.gridwidth = 3;
-		gbc_lblImageFileType.insets = new Insets(0, 0, 5, 5);
+		gbc_lblImageFileType.insets = new Insets(0, 0, 5, 0);
 		gbc_lblImageFileType.gridx = 0;
 		gbc_lblImageFileType.gridy = 6;
 		add(lblImageFileType, gbc_lblImageFileType);
 		
-		JLabel lbljpg = new JLabel(".Jpg");
-		GridBagConstraints gbc_lbljpg = new GridBagConstraints();
-		gbc_lbljpg.insets = new Insets(0, 0, 0, 5);
-		gbc_lbljpg.gridx = 0;
-		gbc_lbljpg.gridy = 7;
-		add(lbljpg, gbc_lbljpg);
+		lblImageFileType_1 = new JLabel(".Jpg");
+		GridBagConstraints gbc_lblImageFileType_1 = new GridBagConstraints();
+		gbc_lblImageFileType_1.insets = new Insets(0, 0, 5, 5);
+		gbc_lblImageFileType_1.gridx = 0;
+		gbc_lblImageFileType_1.gridy = 7;
+		add(lblImageFileType_1, gbc_lblImageFileType_1);
 		
-
+		JLabel lblNewLabel = new JLabel("Status");
+		lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 12));
+		GridBagConstraints gbc_lblNewLabel = new GridBagConstraints();
+		gbc_lblNewLabel.gridwidth = 3;
+		gbc_lblNewLabel.insets = new Insets(0, 0, 5, 5);
+		gbc_lblNewLabel.gridx = 0;
+		gbc_lblNewLabel.gridy = 8;
+		add(lblNewLabel, gbc_lblNewLabel);
+		
+		JPanel panel_1 = new JPanel();
+		GridBagConstraints gbc_panel_1 = new GridBagConstraints();
+		gbc_panel_1.insets = new Insets(0, 0, 0, 5);
+		gbc_panel_1.fill = GridBagConstraints.BOTH;
+		gbc_panel_1.gridx = 1;
+		gbc_panel_1.gridy = 9;
+		add(panel_1, gbc_panel_1);
+		
+		JLabel lblNumSaved = new JLabel("Num Saved: ");
+		panel_1.add(lblNumSaved);
+		
+		lblVlunumsaved = new JLabel("vluNumSaved");
+		panel_1.add(lblVlunumsaved);
+		
+		this.refreshDoSave();
+		this.refreshFilePath();
+		this.refreshFrameSaveInterval();
+		this.refreshFramesSaved();
+		
 	}
 	
-	private long imageCount = 0;
-	private JTextField txtFilepath;
+
 	
 	private void saveImage(final BufferedImage image)
 	{
 		framesSeen++;
 		if(framesSeen%everyXthFrame == 0 && doSave){
-			framesSaved++;
+
 			try {
 			String filePath = filepath + "image"+framesSaved+".jpg";
 			File toSaveTo = new File(filePath);
-			
-				ImageIO.write(image, "jpg", toSaveTo);
+			ImageIO.write(image, "jpg", toSaveTo);
+			framesSaved++;
+			this.refreshFramesSaved();
 			} catch (IOException e) {
 				System.err.println("Failed to save a frame to image");
 				e.printStackTrace();
@@ -197,6 +282,10 @@ public class FrameSaverPanel extends JPanel implements ICCPlugin
 		}
 	}
 	
+	private void refreshFramesSaved() {
+		this.lblVlunumsaved.setText(this.framesSaved + "");
+	}
+
 	public void activate(IARDrone drone)
 	{
 		this.drone = drone;
@@ -206,7 +295,8 @@ public class FrameSaverPanel extends JPanel implements ICCPlugin
 				saveImage(image);
 			}
 		});
-		doSave = true;
+		doSave = false;
+		this.refreshDoSave();
 	}
 
 	public void deactivate()
@@ -232,7 +322,7 @@ public class FrameSaverPanel extends JPanel implements ICCPlugin
 
 	public Dimension getScreenSize()
 	{
-		return new Dimension(650, 390);
+		return new Dimension(450, 280);
 	}
 	
 	public Point getScreenLocation()
