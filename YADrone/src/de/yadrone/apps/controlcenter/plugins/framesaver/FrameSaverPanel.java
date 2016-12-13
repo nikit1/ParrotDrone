@@ -32,7 +32,9 @@ public class FrameSaverPanel extends JPanel implements ICCPlugin
 	
 	private BufferedImage image = null;
 	private Result detectionResult;
-	
+	private int everyXthFrame = 35;
+	private int framesSeen = 0;
+	private int framesSaved = 0;
 
 	
 	public FrameSaverPanel()
@@ -46,7 +48,11 @@ public class FrameSaverPanel extends JPanel implements ICCPlugin
 	
 	private void saveImage(final BufferedImage image)
 	{
-		System.out.println("SAVING IMAGE");
+		framesSeen++;
+		if(framesSeen%everyXthFrame == 0 && doSave){
+			framesSaved++;
+			System.out.println("SAVING IMAGE " + framesSaved);
+		}
 	}
 
 	
