@@ -136,6 +136,9 @@ public class KeyboardCommandManager implements KeyListener
 			case KeyEvent.VK_MINUS:
 				drone.setSpeed(drone.getSpeed()-1);
 				break;
+			case KeyEvent.VK_J:
+				drone.spinLeft();
+				break;
 		}
 	}
 
