@@ -24,12 +24,9 @@ import de.yadrone.base.IARDrone;
 import de.yadrone.base.video.ImageListener;
 import javax.swing.JLabel;
 import javax.swing.JButton;
-import java.awt.GridLayout;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
-import com.jgoodies.forms.layout.FormLayout;
-import com.jgoodies.forms.layout.ColumnSpec;
-import com.jgoodies.forms.layout.RowSpec;
+
 import java.awt.Insets;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -43,7 +40,7 @@ public class searchroutine extends JPanel implements ICCPlugin{
 	
 	private BufferedImage image = null;
 	private Result detectionResult;
-	private JLabel QRcode;
+	public int hoverLength = 0;
 	
 	
 	public searchroutine()
@@ -54,6 +51,14 @@ public class searchroutine extends JPanel implements ICCPlugin{
 		gridBagLayout.columnWeights = new double[]{0.0, 0.0, 0.0, 1.0, Double.MIN_VALUE};
 		gridBagLayout.rowWeights = new double[]{1.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
 		setLayout(gridBagLayout);
+		
+		JPanel panel_1 = new JPanel();
+		GridBagConstraints gbc_panel_1 = new GridBagConstraints();
+		gbc_panel_1.insets = new Insets(0, 0, 5, 5);
+		gbc_panel_1.fill = GridBagConstraints.BOTH;
+		gbc_panel_1.gridx = 1;
+		gbc_panel_1.gridy = 0;
+		add(panel_1, gbc_panel_1);
 		
 		JPanel panel = new JPanel(){
 			public void paint(Graphics g){
@@ -79,6 +84,14 @@ public class searchroutine extends JPanel implements ICCPlugin{
 						g.setFont(new Font("SansSerif", Font.BOLD, 14));
 						g.drawString(code, (int)a.getX(), (int)a.getY());
 						g.drawString(orientation, (int)a.getX(), (int)a.getY() + 20);
+						
+						// hover up to 10 times for .1ms and then land.
+						if (hoverLength < 100){
+							drone.getCommandManager().hover().doFor(100);
+							hoverLength++;
+						} else {
+							drone.landing();
+						}
 					}
 				}
 				else
@@ -90,7 +103,6 @@ public class searchroutine extends JPanel implements ICCPlugin{
 		};
 		GridBagConstraints gbc_panel = new GridBagConstraints();
 		gbc_panel.gridheight = 6;
-		gbc_panel.insets = new Insets(0, 0, 5, 0);
 		gbc_panel.fill = GridBagConstraints.BOTH;
 		gbc_panel.gridx = 3;
 		gbc_panel.gridy = 0;
@@ -106,7 +118,11 @@ public class searchroutine extends JPanel implements ICCPlugin{
 		JButton btnBasicRoutine = new JButton("Basic routine");
 		btnBasicRoutine.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				drone.basicRoutine();
+				try {
+					drone.basicRoutine();
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
 			}
 		});
 		GridBagConstraints gbc_btnBasicRoutine = new GridBagConstraints();
@@ -136,20 +152,7 @@ public class searchroutine extends JPanel implements ICCPlugin{
 		add(btnRoutine, gbc_btnRoutine);
 		
 		panel.setBackground(Color.BLACK);
-//		// might also be (1280*720)
-//		Dimension dim = new Dimension(640, 360);
-//		
-//		setMinimumSize(dim);
-//		setMaximumSize(dim);
-//		setSize(dim);
-		
-//		addMouseListener(new MouseAdapter() {
-//			public void mouseClicked(MouseEvent e)
-//			{
-//				// toggle camera view from horizontal to vertical
-//				drone.toggleCamera();
-//			}
-//		});
+
 	}
 
 	

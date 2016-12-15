@@ -36,24 +36,8 @@ public class QRCodeScannerPanel extends JPanel implements ICCPlugin
 	public QRCodeScannerPanel()
 	{
 		setBackground(Color.BLACK);
-//		// might also be (1280*720)
-//		Dimension dim = new Dimension(640, 360);
-//		
-//		setMinimumSize(dim);
-//		setMaximumSize(dim);
-//		setSize(dim);
-		
-//		addMouseListener(new MouseAdapter() {
-//			public void mouseClicked(MouseEvent e)
-//			{
-//				// toggle camera view from horizontal to vertical
-//				drone.toggleCamera();
-//			}
-//		});
 	}
-	
-	private long imageCount = 0;
-	
+
 	private void setImage(final BufferedImage image)
 	{
 		this.image = image;

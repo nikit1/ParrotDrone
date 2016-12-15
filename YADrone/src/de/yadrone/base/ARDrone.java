@@ -255,21 +255,20 @@ public class ARDrone implements IARDrone, IExceptionListener {
 			commandManager.hover();
 	}
 	
-	public void basicRoutine(){
-		getCommandManager().takeOff();
-		getCommandManager().waitFor(1000);
-		getCommandManager().landing();
+	public void basicRoutine() throws InterruptedException{
+		commandManager.takeOff();
+		Thread.sleep(3000);
+		commandManager.landing();
 	}
 	
 	public void doYouDareRoutine() {
-		getCommandManager().takeOff();
-		getCommandManager().waitFor(2000);
-		getCommandManager().forward(10).doFor(500);
-		getCommandManager().backward(10).doFor(500);
-		getCommandManager().up(10).doFor(500);
-		getCommandManager().backward(10).doFor(500);
-		getCommandManager().goRight(10).doFor(500);
-		getCommandManager().landing();
+		commandManager.takeOff();
+		commandManager.forward(10).doFor(500);
+		commandManager.backward(10).doFor(500);
+		commandManager.up(10).doFor(500);
+		commandManager.backward(10).doFor(500);
+		commandManager.goRight(10).doFor(500);
+		commandManager.landing();
 	}
 	
 	@Override
