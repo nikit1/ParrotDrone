@@ -255,6 +255,23 @@ public class ARDrone implements IARDrone, IExceptionListener {
 			commandManager.hover();
 	}
 	
+	public void basicRoutine(){
+		getCommandManager().takeOff();
+		getCommandManager().waitFor(1000);
+		getCommandManager().landing();
+	}
+	
+	public void doYouDareRoutine() {
+		getCommandManager().takeOff();
+		getCommandManager().waitFor(2000);
+		getCommandManager().forward(10).doFor(500);
+		getCommandManager().backward(10).doFor(500);
+		getCommandManager().up(10).doFor(500);
+		getCommandManager().backward(10).doFor(500);
+		getCommandManager().goRight(10).doFor(500);
+		getCommandManager().landing();
+	}
+	
 	@Override
 	public void setMaxAltitude(int altitude) {
 		if (commandManager != null)

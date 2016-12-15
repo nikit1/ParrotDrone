@@ -61,6 +61,8 @@ public interface IARDrone {
 	public void goLeft();
 	public void freeze();
 	public void hover();
+	public void basicRoutine();
+	public void doYouDareRoutine();
 	
 	//getter
 	public int getSpeed();
