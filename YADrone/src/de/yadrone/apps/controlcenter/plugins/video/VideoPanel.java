@@ -35,6 +35,7 @@ import com.xuggle.xuggler.ICodec;
 import de.yadrone.apps.controlcenter.CCPropertyManager;
 import de.yadrone.apps.controlcenter.ICCPlugin;
 import de.yadrone.base.IARDrone;
+import de.yadrone.base.command.VideoBitRateMode;
 import de.yadrone.base.command.VideoCodec;
 import de.yadrone.base.video.ImageListener;
 
@@ -108,6 +109,9 @@ public class VideoPanel extends JPanel implements ICCPlugin, ImageListener
 		else if (props.getVideoFormat().equals(FORMAT_H264))
 		{
 			drone.getCommandManager().setVideoCodec(VideoCodec.H264_720P);
+			
+			//Set to maximum bitrate
+			drone.getCommandManager().setVideoBitrateControl(VideoBitRateMode.DISABLED);
 		}
 //		else if (props.getVideoFormat().equals(FORMAT_MP4_USB))
 //		{

@@ -111,7 +111,7 @@ public class VideoManager extends AbstractTCPManager implements ImageListener
 			System.out.println("VideoManager: tickle ");
 			ticklePort(ARDroneUtils.VIDEO_PORT);
 			
-//			manager.setVideoBitrateControl(VideoBitRateMode.DISABLED); // bitrate set to maximum
+		//	manager.setVideoBitrateControl(VideoBitRateMode.DISABLED); // bitrate set to maximum
 			
 			System.out.println("VideoManager: decode ");
 			decoder.decode(getInputStream());
