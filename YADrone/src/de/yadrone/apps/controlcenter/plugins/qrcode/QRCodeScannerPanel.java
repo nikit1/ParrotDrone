@@ -77,14 +77,6 @@ public class QRCodeScannerPanel extends JPanel implements ICCPlugin
 			
 			code = detectionResult.getText();
 			
-			// System.out.println("QRCode Text: " + result.getText());
-
-			// for (int i=0; i < points.length; i++)
-			// {
-			// System.out.println("QRCode Point # " + i + ": " +
-			// points[i].getX() + "/" + points[i].getY());
-			// }
-
 			ResultPoint[] points = detectionResult.getResultPoints();
 			ResultPoint a = points[1]; // top-left
 			ResultPoint b = points[2]; // top-right
