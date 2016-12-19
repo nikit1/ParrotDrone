@@ -119,11 +119,9 @@ public class searchroutine extends JPanel implements ICCPlugin{
 		JButton btnBasicRoutine = new JButton("Basic routine");
 		btnBasicRoutine.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				try {
-					drone.basicRoutine();
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
+				
+				drone.takeOff();
+				
 			}
 		});
 		GridBagConstraints gbc_btnBasicRoutine = new GridBagConstraints();

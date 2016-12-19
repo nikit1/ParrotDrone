@@ -49,7 +49,9 @@ public class KeyboardCommandManager implements KeyListener
 		}
 
 		switch (key)
-		{ //NOAH TEST COMMENT
+		{   case KeyEvent.VK_G:
+				drone.freeze();
+				break;
 			case KeyEvent.VK_ENTER:
 				drone.takeOff();
 				break;
