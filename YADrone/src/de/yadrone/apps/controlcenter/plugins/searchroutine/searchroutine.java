@@ -220,12 +220,14 @@ public class searchroutine extends JPanel implements ICCPlugin{
 			
 			orientation = (int)theta + " °";
 			
-			// hover up to 10 times for .1ms and then land.
-			if (hoverLength < 1){
-				//drone.getCommandManager().hover();
-				hoverLength++;
-			} else {
-				drone.landing();
+			if(runRoutine){
+				// hover up to 10 times for .1ms and then land.
+				if (hoverLength < 1){
+				//	drone.getCommandManager().hover();
+					hoverLength++;
+				} else {
+					drone.landing();
+				}
 			}
 		} 
 		catch (ReaderException e) 
