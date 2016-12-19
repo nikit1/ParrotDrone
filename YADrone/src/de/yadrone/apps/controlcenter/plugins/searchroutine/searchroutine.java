@@ -21,6 +21,7 @@ import com.google.zxing.common.HybridBinarizer;
 
 import de.yadrone.apps.controlcenter.ICCPlugin;
 import de.yadrone.base.IARDrone;
+import de.yadrone.base.command.CommandManager;
 import de.yadrone.base.video.ImageListener;
 import javax.swing.JLabel;
 import javax.swing.JButton;
@@ -86,8 +87,8 @@ public class searchroutine extends JPanel implements ICCPlugin{
 						g.drawString(orientation, (int)a.getX(), (int)a.getY() + 20);
 						
 						// hover up to 10 times for .1ms and then land.
-						if (hoverLength < 100){
-							drone.getCommandManager().hover().doFor(100);
+						if (hoverLength < 1){
+							//drone.getCommandManager().hover();
 							hoverLength++;
 						} else {
 							drone.landing();
@@ -141,7 +142,7 @@ public class searchroutine extends JPanel implements ICCPlugin{
 		JButton btnRoutine = new JButton("Do you dare?");
 		btnRoutine.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				drone.doYouDareRoutine();
+				doYouDareRoutine();
 			}
 		});
 		GridBagConstraints gbc_btnRoutine = new GridBagConstraints();
@@ -156,6 +157,18 @@ public class searchroutine extends JPanel implements ICCPlugin{
 	}
 
 	
+	protected void doYouDareRoutine() {
+		CommandManager commandManager = drone.getCommandManager();
+		commandManager.takeOff();
+		commandManager.forward(10).doFor(500);
+		commandManager.backward(10).doFor(500);
+		commandManager.up(10).doFor(500);
+		commandManager.backward(10).doFor(500);
+		commandManager.goRight(10).doFor(500);
+		commandManager.landing();
+	}
+		
+
 	private void setImage(final BufferedImage image)
 	{
 		this.image = image;

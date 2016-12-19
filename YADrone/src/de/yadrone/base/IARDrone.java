@@ -62,7 +62,7 @@ public interface IARDrone {
 	public void freeze();
 	public void hover();
 	public void basicRoutine() throws InterruptedException;
-	public void doYouDareRoutine();
+	
 	
 	//getter
 	public int getSpeed();

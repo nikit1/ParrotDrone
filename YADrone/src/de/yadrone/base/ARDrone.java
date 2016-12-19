@@ -261,15 +261,7 @@ public class ARDrone implements IARDrone, IExceptionListener {
 		commandManager.landing();
 	}
 	
-	public void doYouDareRoutine() {
-		commandManager.takeOff();
-		commandManager.forward(10).doFor(500);
-		commandManager.backward(10).doFor(500);
-		commandManager.up(10).doFor(500);
-		commandManager.backward(10).doFor(500);
-		commandManager.goRight(10).doFor(500);
-		commandManager.landing();
-	}
+
 	
 	@Override
 	public void setMaxAltitude(int altitude) {
