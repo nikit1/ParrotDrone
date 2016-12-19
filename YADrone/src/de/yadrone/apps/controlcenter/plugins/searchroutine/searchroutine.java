@@ -42,7 +42,7 @@ public class searchroutine extends JPanel implements ICCPlugin{
 	private BufferedImage image = null;
 	private Result detectionResult;
 	public int hoverLength = 0;
-	
+	private boolean runRoutine = false;
 	
 	public searchroutine()
 	{
@@ -86,13 +86,6 @@ public class searchroutine extends JPanel implements ICCPlugin{
 						g.drawString(code, (int)a.getX(), (int)a.getY());
 						g.drawString(orientation, (int)a.getX(), (int)a.getY() + 20);
 						
-						// hover up to 10 times for .1ms and then land.
-						if (hoverLength < 1){
-							//drone.getCommandManager().hover();
-							hoverLength++;
-						} else {
-							drone.landing();
-						}
 					}
 				}
 				else
@@ -116,14 +109,22 @@ public class searchroutine extends JPanel implements ICCPlugin{
 		gbc_lblRoutine.gridy = 1;
 		add(lblRoutine, gbc_lblRoutine);
 		
-		JButton btnBasicRoutine = new JButton("Basic routine");
+		JButton btnBasicRoutine = new JButton("Toggle Routine");
 		btnBasicRoutine.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				
-				drone.takeOff();
+				runRoutine = !runRoutine;
+				lblRunning.setText(runRoutine + "");
 				
 			}
 		});
+		
+		lblRunning = new JLabel("Running");
+		GridBagConstraints gbc_lblRunning = new GridBagConstraints();
+		gbc_lblRunning.insets = new Insets(0, 0, 5, 5);
+		gbc_lblRunning.gridx = 0;
+		gbc_lblRunning.gridy = 2;
+		add(lblRunning, gbc_lblRunning);
 		GridBagConstraints gbc_btnBasicRoutine = new GridBagConstraints();
 		gbc_btnBasicRoutine.insets = new Insets(0, 0, 5, 5);
 		gbc_btnBasicRoutine.gridx = 1;
@@ -218,6 +219,14 @@ public class searchroutine extends JPanel implements ICCPlugin{
 			}
 			
 			orientation = (int)theta + " °";
+			
+			// hover up to 10 times for .1ms and then land.
+			if (hoverLength < 1){
+				//drone.getCommandManager().hover();
+				hoverLength++;
+			} else {
+				drone.landing();
+			}
 		} 
 		catch (ReaderException e) 
 		{
@@ -234,11 +243,14 @@ public class searchroutine extends JPanel implements ICCPlugin{
 			setImage(image);
 		}
 	};
+	private JLabel lblRunning;
 	
 	public void activate(IARDrone drone)
 	{
 		this.drone = drone;
 		drone.getVideoManager().addImageListener(imageListener);
+		this.runRoutine = false;
+		this.lblRunning.setText(runRoutine+ "");
 	}
 
 	public void deactivate()
