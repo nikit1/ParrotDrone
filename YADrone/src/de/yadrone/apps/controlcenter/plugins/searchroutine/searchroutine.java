@@ -69,16 +69,20 @@ public class searchroutine extends JPanel implements ICCPlugin{
 					if (detectionResult != null)
 					{
 						ResultPoint[] points = detectionResult.getResultPoints();
+						g.setColor(Color.GREEN);
 						ResultPoint a = points[1]; // top-left
 						ResultPoint b = points[2]; // top-right
 						ResultPoint c = points[0]; // bottom-left
-						ResultPoint d = points[3]; // alignment point (bottom-right)s
-						
-						//when scanning?
-						g.setColor(Color.GREEN);
-						
-						g.drawPolygon(new int[] {(int)a.getX(),(int)b.getX(),(int)d.getX(),(int)c.getX()}, 
+						if(points.length == 4){
+							ResultPoint d = points[3]; // alignment point (bottom-right)
+							g.drawPolygon(new int[] {(int)a.getX(),(int)b.getX(),(int)d.getX(),(int)c.getX()}, 
 								      new int[] {(int)a.getY(),(int)b.getY(),(int)d.getY(),(int)c.getY()}, 4);
+						}
+						else{
+							g.drawPolygon(new int[] {(int)a.getX(),(int)b.getX(),(int)c.getX()}, 
+								      new int[] {(int)a.getY(),(int)b.getY(),(int)c.getY()}, 3);
+						}
+
 						
 						// font of the QR code displayed on screen.
 						g.setColor(Color.RED);
@@ -195,7 +199,7 @@ public class searchroutine extends JPanel implements ICCPlugin{
 			ResultPoint a = points[1]; // top-left
 			ResultPoint b = points[2]; // top-right
 			ResultPoint c = points[0]; // bottom-left
-			ResultPoint d = points[3]; // alignment point (bottom-right)
+		//	ResultPoint d = points[3]; // alignment point (bottom-right)
 			
 			// Find the degree of the rotation that is needed
 

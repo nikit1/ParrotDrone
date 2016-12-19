@@ -65,7 +65,7 @@ public class QRCodeScannerPanel extends JPanel implements ICCPlugin
 			ResultPoint a = points[1]; // top-left
 			ResultPoint b = points[2]; // top-right
 			ResultPoint c = points[0]; // bottom-left
-			ResultPoint d = points[3]; // alignment point (bottom-right)
+			//ResultPoint d = points[3]; // alignment point (bottom-right)
 			
 			// Find the degree of the rotation that is needed
 
@@ -107,15 +107,22 @@ public class QRCodeScannerPanel extends JPanel implements ICCPlugin
 			if (detectionResult != null)
 			{
 				ResultPoint[] points = detectionResult.getResultPoints();
+				g.setColor(Color.GREEN);
 				ResultPoint a = points[1]; // top-left
 				ResultPoint b = points[2]; // top-right
 				ResultPoint c = points[0]; // bottom-left
-				ResultPoint d = points[3]; // alignment point (bottom-right)
-				
-				g.setColor(Color.GREEN);
-				
-				g.drawPolygon(new int[] {(int)a.getX(),(int)b.getX(),(int)d.getX(),(int)c.getX()}, 
+				if(points.length == 4){
+					ResultPoint d = points[3]; // alignment point (bottom-right)
+					g.drawPolygon(new int[] {(int)a.getX(),(int)b.getX(),(int)d.getX(),(int)c.getX()}, 
 						      new int[] {(int)a.getY(),(int)b.getY(),(int)d.getY(),(int)c.getY()}, 4);
+				}
+				else{
+					g.drawPolygon(new int[] {(int)a.getX(),(int)b.getX(),(int)c.getX()}, 
+						      new int[] {(int)a.getY(),(int)b.getY(),(int)c.getY()}, 3);
+				}
+				
+				
+				
 				
 				g.setColor(Color.RED);
 				g.setFont(new Font("SansSerif", Font.BOLD, 14));
