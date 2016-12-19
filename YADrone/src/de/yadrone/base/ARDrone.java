@@ -211,13 +211,15 @@ public class ARDrone implements IARDrone, IExceptionListener {
 	@Override
 	public void spinRight() {
 		if (commandManager != null)
-			commandManager.spinRight(speed);
+			commandManager.spinRight(100);
+			//commandManager.spinRight(speed);
 	}
 
 	@Override
 	public void spinLeft() {
 		if (commandManager != null)
-			commandManager.spinLeft(speed);
+			commandManager.spinLeft(100);
+			//commandManager.spinLeft(speed);
 	}
 
 	@Override
