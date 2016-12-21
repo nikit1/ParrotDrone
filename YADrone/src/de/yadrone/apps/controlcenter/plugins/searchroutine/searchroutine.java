@@ -6,6 +6,8 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
+import java.text.AttributedCharacterIterator;
+import java.time.Clock;
 
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
@@ -43,6 +45,7 @@ public class searchroutine extends JPanel implements ICCPlugin{
 	private Result detectionResult;
 	public int hoverLength = 0;
 	private boolean runRoutine = false;
+	public Clock clock;
 	
 	public searchroutine()
 	{
@@ -63,6 +66,7 @@ public class searchroutine extends JPanel implements ICCPlugin{
 		
 		JPanel panel = new JPanel(){
 			public void paint(Graphics g){
+				g.drawString((AttributedCharacterIterator) Clock.systemDefaultZone(), 10, 20);
 				if (image != null)
 				{
 					g.drawImage(image, 0, 0, image.getWidth(), image.getHeight(), null);
