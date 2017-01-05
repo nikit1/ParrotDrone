@@ -1,13 +1,14 @@
 package de.yadrone.apps.controlcenter.plugins.searchroutine;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
-import java.text.AttributedCharacterIterator;
-import java.time.Clock;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
@@ -45,8 +46,33 @@ public class searchroutine extends JPanel implements ICCPlugin{
 	private Result detectionResult;
 	public int hoverLength = 0;
 	private boolean runRoutine = false;
-	public Clock clock;
-	
+	private JLabel lblTime;
+
+	public void clock1() {
+		Thread clock = new Thread() {
+			public void run(){
+				try {
+					for(;;){
+					Calendar cal = new GregorianCalendar();
+					
+					int second = cal.get(Calendar.SECOND);
+					int minute = cal.get(Calendar.MINUTE);
+					int hour = cal.get(Calendar.HOUR);
+					int ms = cal.get(Calendar.MILLISECOND);
+					
+					lblTime.setText(hour+":" + (minute)+ ":" + second + ":" + (ms));
+					
+					sleep(10);
+					}
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		};
+		clock.start();
+	}
+		
 	public searchroutine()
 	{
 		GridBagLayout gridBagLayout = new GridBagLayout();
@@ -64,12 +90,19 @@ public class searchroutine extends JPanel implements ICCPlugin{
 		gbc_panel_1.gridy = 0;
 		add(panel_1, gbc_panel_1);
 		
+		// CLOCK
+		lblTime = new JLabel("Clock");
+		panel_1.add(lblTime);
+		lblTime.setForeground(Color.RED);
+		
+		
+		// JPANEL
 		JPanel panel = new JPanel(){
 			public void paint(Graphics g){
-				g.drawString((AttributedCharacterIterator) Clock.systemDefaultZone(), 10, 20);
 				if (image != null)
 				{
 					g.drawImage(image, 0, 0, image.getWidth(), image.getHeight(), null);
+					
 					if (detectionResult != null)
 					{
 						ResultPoint[] points = detectionResult.getResultPoints();
@@ -103,6 +136,7 @@ public class searchroutine extends JPanel implements ICCPlugin{
 				}
 			}
 		};
+		
 		GridBagConstraints gbc_panel = new GridBagConstraints();
 		gbc_panel.gridheight = 6;
 		gbc_panel.fill = GridBagConstraints.BOTH;
@@ -160,10 +194,10 @@ public class searchroutine extends JPanel implements ICCPlugin{
 		add(btnRoutine, gbc_btnRoutine);
 		
 		panel.setBackground(Color.BLACK);
-
+		
+		clock1();
 	}
-
-	
+		
 	protected void doYouDareRoutine() {
 		CommandManager commandManager = drone.getCommandManager();
 		commandManager.takeOff();
