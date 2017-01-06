@@ -48,7 +48,7 @@ public class searchroutine extends JPanel implements ICCPlugin{
 	private boolean runRoutine = false;
 	private JLabel lblTime;
 
-	public void clock1() {
+	public void clockOnScreen() {
 		Thread clock = new Thread() {
 			public void run(){
 				try {
@@ -76,9 +76,9 @@ public class searchroutine extends JPanel implements ICCPlugin{
 	public searchroutine()
 	{
 		GridBagLayout gridBagLayout = new GridBagLayout();
-		gridBagLayout.columnWidths = new int[]{0, 0, 0, 0, 0};
+		gridBagLayout.columnWidths = new int[]{0, 0, 0, 0, 0, 0};
 		gridBagLayout.rowHeights = new int[]{0, 0, 0, 0, 0, 0, 0};
-		gridBagLayout.columnWeights = new double[]{0.0, 0.0, 0.0, 1.0, Double.MIN_VALUE};
+		gridBagLayout.columnWeights = new double[]{0.0, 0.0, 0.0, 0.0, 1.0, Double.MIN_VALUE};
 		gridBagLayout.rowWeights = new double[]{1.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
 		setLayout(gridBagLayout);
 		
@@ -90,13 +90,7 @@ public class searchroutine extends JPanel implements ICCPlugin{
 		gbc_panel_1.gridy = 0;
 		add(panel_1, gbc_panel_1);
 		
-		// CLOCK
-		lblTime = new JLabel("Clock");
-		panel_1.add(lblTime);
-		lblTime.setForeground(Color.RED);
-		
-		
-		// JPANEL
+		// JPANEL - Displays the video/QRCode.
 		JPanel panel = new JPanel(){
 			public void paint(Graphics g){
 				if (image != null)
@@ -125,8 +119,7 @@ public class searchroutine extends JPanel implements ICCPlugin{
 						g.setColor(Color.RED);
 						g.setFont(new Font("SansSerif", Font.BOLD, 14));
 						g.drawString(code, (int)a.getX(), (int)a.getY());
-						g.drawString(orientation, (int)a.getX(), (int)a.getY() + 20);
-						
+						g.drawString(orientation, (int)a.getX(), (int)a.getY() + 20);	
 					}
 				}
 				else
@@ -138,9 +131,10 @@ public class searchroutine extends JPanel implements ICCPlugin{
 		};
 		
 		GridBagConstraints gbc_panel = new GridBagConstraints();
-		gbc_panel.gridheight = 6;
+		gbc_panel.insets = new Insets(0, 0, 5, 0);
+		gbc_panel.gridheight = 5;
 		gbc_panel.fill = GridBagConstraints.BOTH;
-		gbc_panel.gridx = 3;
+		gbc_panel.gridx = 4;
 		gbc_panel.gridy = 0;
 		add(panel, gbc_panel);
 		
@@ -195,7 +189,15 @@ public class searchroutine extends JPanel implements ICCPlugin{
 		
 		panel.setBackground(Color.BLACK);
 		
-		clock1();
+		// CLOCK
+		lblTime = new JLabel("Clock");
+		GridBagConstraints gbc_lblTime = new GridBagConstraints();
+		gbc_lblTime.gridx = 4;
+		gbc_lblTime.gridy = 5;
+		add(lblTime, gbc_lblTime);
+		lblTime.setForeground(Color.RED);
+		
+		clockOnScreen();
 	}
 		
 	protected void doYouDareRoutine() {
@@ -208,7 +210,6 @@ public class searchroutine extends JPanel implements ICCPlugin{
 		commandManager.goRight(10).doFor(500);
 		commandManager.landing();
 	}
-		
 
 	private void setImage(final BufferedImage image)
 	{
